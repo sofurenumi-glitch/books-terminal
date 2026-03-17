@@ -19,7 +19,8 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
+        max_tokens: 2000,
+        system: 'あなたは選書AIです。必ずJSON形式のみで返答してください。前置きや説明文は一切不要です。',
         messages
       })
     });
