@@ -405,14 +405,32 @@ Q3（魔法でなれるとしたらどんな人・変身願望）：${answers.q3
       const data = await res.json();
       clearInterval(interval);
 
+      if (data.error) {
+        throw new Error('APIエラー: ' + JSON.stringify(data.error));
+      }
+      if (!data.content) {
+        throw new Error('contentなし: ' + JSON.stringify(data).substring(0, 300));
+      }
+
       const text = data.content.map(i => i.text || '').join('');
-      const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+      if (!text) {
+        throw new Error('テキストなし');
+      }
+
+      const cleaned = text.replace(/```json|```/g, '').trim();
+      let parsed;
+      try {
+        parsed = JSON.parse(cleaned);
+      } catch (jsonErr) {
+        throw new Error('JSONパース失敗: ' + cleaned.substring(0, 200));
+      }
+
       renderResult(parsed);
       showScreen('screen-result');
     } catch (e) {
       clearInterval(interval);
       showScreen('screen-questions');
-      document.getElementById('q-error').textContent = '選書中にエラーが発生しました。もう一度お試しください。';
+      document.getElementById('q-error').textContent = 'エラー: ' + e.message;
       document.getElementById('q-error').style.display = 'block';
     }
   }
