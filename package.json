@@ -1,0 +1,11 @@
+{
+  "name": "books-terminal",
+  "version": "1.0.0",
+  "description": "BOOKS Terminal - AI選書サービス",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.20.0"
+  }
+}

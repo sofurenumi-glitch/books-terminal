@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BOOKS Terminal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F8F4EE;
+      --cream-dark: #F0EBE3;
+      --brown: #3A322C;
+      --brown-mid: #7A6A5A;
+      --brown-light: #B8A898;
+      --brown-pale: #E0D8CE;
+      --accent: #9E8A72;
+      --card: #FDFAF6;
+    }
+
+    body {
+      background: var(--cream);
+      font-family: 'Noto Serif JP', Georgia, serif;
+      color: var(--brown);
+      min-height: 100vh;
+    }
+
+    .screen {
+      display: none;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+      flex-direction: column;
+    }
+    .screen.active { display: flex; }
+
+    .container { max-width: 460px; width: 100%; }
+    .container-wide { max-width: 560px; width: 100%; margin: 0 auto; padding: 64px 24px; }
+
+    .eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 10px;
+      letter-spacing: 5px;
+      color: var(--brown-light);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 300; color: var(--brown); letter-spacing: -1px; line-height: 1; margin-bottom: 2px; text-align: center; }
+    .logo-sub { font-family: 'Cormorant Garamond', serif; font-size: 15px; letter-spacing: 9px; color: var(--brown-light); margin-bottom: 44px; text-align: center; }
+
+    .divider { width: 1px; height: 56px; background: linear-gradient(to bottom, transparent, var(--brown-pale), transparent); margin: 0 auto 44px; }
+
+    .body-text { color: var(--brown-mid); font-size: 14px; line-height: 2.4; margin-bottom: 44px; font-weight: 300; text-align: center; }
+    .italic { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--brown-light); font-size: 13px; }
+
+    .btn {
+      background: var(--brown);
+      border: none;
+      color: var(--cream);
+      padding: 15px 48px;
+      font-size: 11px;
+      letter-spacing: 4px;
+      cursor: pointer;
+      font-family: 'Noto Serif JP', serif;
+      transition: background 0.3s;
+      width: 100%;
+    }
+    .btn:hover { background: #564840; }
+    .btn:disabled { background: var(--brown-pale); color: var(--brown-light); cursor: default; }
+    .btn-sm { width: auto; padding: 14px 36px; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--brown-pale);
+      color: var(--accent);
+      padding: 13px 40px;
+      font-size: 11px;
+      letter-spacing: 3px;
+      cursor: pointer;
+      font-family: 'Noto Serif JP', serif;
+      transition: all 0.3s;
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--brown); }
+
+    .field { margin-bottom: 32px; }
+    .label { font-size: 10px; letter-spacing: 3px; color: var(--brown-light); display: block; margin-bottom: 12px; text-transform: uppercase; }
+    .input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--brown-pale);
+      color: var(--brown);
+      padding: 10px 0;
+      font-size: 15px;
+      outline: none;
+      font-family: 'Noto Serif JP', serif;
+      transition: border-color 0.3s;
+      width: 100%;
+    }
+    .input:focus { border-bottom-color: var(--accent); }
+    .input::placeholder { color: var(--brown-pale); }
+    .textarea {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--brown-pale);
+      color: var(--brown);
+      padding: 12px 0;
+      font-size: 15px;
+      outline: none;
+      resize: none;
+      font-family: 'Noto Serif JP', serif;
+      line-height: 2;
+      width: 100%;
+      transition: border-color 0.3s;
+    }
+    .textarea:focus { border-bottom-color: var(--accent); }
+    .textarea::placeholder { color: var(--brown-pale); }
+    .hint { color: var(--brown-light); font-size: 12px; margin-top: 8px; font-style: italic; font-family: 'Cormorant Garamond', serif; }
+
+    .progress { display: flex; gap: 6px; margin-bottom: 52px; }
+    .progress-bar { flex: 1; height: 1px; transition: background 0.4s; }
+
+    .question { font-size: 19px; line-height: 1.9; color: var(--brown); margin-bottom: 10px; font-weight: 400; }
+    .question-hint { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--brown-light); font-size: 14px; margin-bottom: 32px; line-height: 1.8; }
+
+    .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 36px; }
+    .back-btn { background: transparent; border: none; color: var(--brown-light); font-size: 12px; cursor: pointer; letter-spacing: 2px; font-family: 'Noto Serif JP', serif; transition: color 0.3s; padding: 8px 0; }
+    .back-btn:hover { color: var(--accent); }
+
+    .spinner { width: 36px; height: 36px; border: 1px solid var(--brown-pale); border-top: 1px solid var(--accent); border-radius: 50%; animation: spin 1.4s linear infinite; margin: 0 auto 36px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--accent); font-size: 15px; letter-spacing: 2px; text-align: center; }
+
+    .profile-card { background: var(--card); border-left: 2px solid var(--brown-pale); padding: 22px 26px; margin-bottom: 48px; }
+    .profile-text { color: #5A4A3E; font-size: 14px; line-height: 2.3; font-weight: 300; }
+
+    .book { display: flex; gap: 18px; padding: 26px 0; border-bottom: 1px solid #EDE6DA; align-items: flex-start; }
+    .book-icon { font-size: 18px; flex-shrink: 0; margin-top: 4px; }
+    .book-role { font-size: 9px; letter-spacing: 3px; margin-bottom: 8px; text-transform: uppercase; font-family: 'Cormorant Garamond', serif; }
+    .book-title { font-size: 17px; color: var(--brown); margin-bottom: 4px; line-height: 1.5; font-weight: 400; }
+    .book-author { color: var(--brown-light); font-size: 12px; margin-bottom: 10px; }
+    .book-reason { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--brown-mid); font-size: 14px; line-height: 1.9; }
+
+    .footer { text-align: center; margin-top: 56px; padding-top: 44px; border-top: 1px solid #EDE6DA; }
+    .footer-text { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--brown-light); font-size: 13px; margin-bottom: 28px; letter-spacing: 1px; }
+
+    .row { display: flex; gap: 12px; align-items: flex-end; }
+    .unit { color: var(--brown-light); font-size: 14px; padding-bottom: 10px; flex-shrink: 0; }
+    .error-text { color: #B85A4A; font-size: 12px; margin-top: 10px; }
+
+    .result-header { text-align: center; margin-bottom: 48px; }
+  </style>
+</head>
+<body>
+
+<!-- INTRO -->
+<div id="screen-intro" class="screen active">
+  <div class="container" style="text-align:center">
+    <div class="eyebrow">Book Discovery Service</div>
+    <div class="logo">BOOKS</div>
+    <div class="logo-sub">Terminal</div>
+    <div class="divider"></div>
+    <p class="body-text">
+      3つの質問に答えるだけで、<br>
+      あなたのためだけの5冊が届きます。<br>
+      <span class="italic">初期値は、愛。</span>
+    </p>
+    <button class="btn" onclick="showScreen('screen-pre')">選書をはじめる</button>
+  </div>
+</div>
+
+<!-- PRE -->
+<div id="screen-pre" class="screen">
+  <div class="container">
+    <div class="eyebrow">Pre-information</div>
+    <h2 style="font-size:20px;font-weight:400;margin-bottom:8px">まず、少しだけ教えてください。</h2>
+    <p class="italic" style="display:block;margin-bottom:44px;line-height:2">あなたのことを、もう少し知らせてください。</p>
+
+    <div class="field">
+      <label class="label">生年月日</label>
+      <div class="row">
+        <input class="input" type="number" id="birthYear" placeholder="1990" style="width:80px">
+        <span class="unit">年</span>
+        <input class="input" type="number" id="birthMonth" placeholder="1" min="1" max="12" style="width:56px">
+        <span class="unit">月生まれ</span>
+      </div>
+    </div>
+
+    <div class="field" style="margin-bottom:44px">
+      <label class="label">最近読んだ本（3冊まで）</label>
+      <textarea class="textarea" id="recentBooks" rows="3" placeholder="例：嫌われる勇気、三体、ぼのぼの…"></textarea>
+      <p class="hint">「最近読んでいない」でも大丈夫です。</p>
+    </div>
+
+    <button class="btn" id="btn-pre" onclick="startQuestions()" disabled>次へ進む</button>
+  </div>
+</div>
+
+<!-- QUESTIONS -->
+<div id="screen-questions" class="screen">
+  <div class="container">
+    <div class="progress" id="progress"></div>
+    <div class="eyebrow" id="q-label"></div>
+    <h2 class="question" id="q-text"></h2>
+    <p class="question-hint" id="q-hint"></p>
+    <textarea class="textarea" id="q-answer" rows="5" oninput="onAnswerInput()"></textarea>
+    <p class="error-text" id="q-error" style="display:none"></p>
+    <div class="nav">
+      <button class="back-btn" onclick="prevQuestion()">← 戻る</button>
+      <button class="btn btn-sm" id="btn-next" onclick="nextQuestion()" disabled>次へ →</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div id="screen-loading" class="screen">
+  <div>
+    <div class="spinner"></div>
+    <p class="loading-text" id="loading-text">あなたを読んでいます…</p>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="screen-result" class="screen" style="align-items:flex-start">
+  <div class="container-wide">
+    <div class="result-header">
+      <div class="eyebrow">Your Selection</div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300">あなたへの5冊</h2>
+    </div>
+    <div class="profile-card"><p class="profile-text" id="result-profile"></p></div>
+    <div id="result-books"></div>
+    <div class="footer">
+      <p class="footer-text">ここで新たな本と出会い、人と出会い、学びと出会う。</p>
+      <button class="btn-outline" onclick="reset()">もう一度試す</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const QUESTIONS = [
+    {
+      id: 'q1', label: 'Q1　原体験', num: 1,
+      question: '子どもの頃、何度も読み返した本や物語を教えてください。',
+      hint: 'マンガ・絵本・アニメの原作でも。「読んでいなかった」でも大丈夫です。',
+      placeholder: '例：ドラえもん、ハリーポッター、読んでいなかった…など'
+    },
+    {
+      id: 'q2', label: 'Q2　欠乏感', num: 2,
+      question: '今の自分に、そっと足してあげたいものがあるとしたら、何でしょう？',
+      hint: '感情でも、能力でも、時間でも。思いつくままに。',
+      placeholder: '例：勇気、余白、仲間、答え…など'
+    },
+    {
+      id: 'q3', label: 'Q3　変身願望', num: 3,
+      question: 'もし今夜、魔法で誰にでもなれるとしたら、どんな人になりたいですか？',
+      hint: '実在の人物でも、架空のキャラクターでも、抽象的な像でも。',
+      placeholder: '例：スティーブ・ジョブズ、自由に生きている人…など'
+    }
+  ];
+
+  const BOOK_ICONS = ['📌','🌱','🚀','🌿','✨'];
+  const ROLE_COLORS = ['#8B6F4E','#5A8A6A','#6A7FA8','#7A9E8A','#9E7A5A'];
+
+  let currentQ = 0;
+  const answers = { q1: '', q2: '', q3: '' };
+  let preData = { birthYear: '', birthMonth: '', books: '' };
+
+  // Pre screen validation
+  document.getElementById('birthYear').addEventListener('input', validatePre);
+  document.getElementById('birthMonth').addEventListener('input', validatePre);
+
+  function validatePre() {
+    const y = document.getElementById('birthYear').value;
+    const m = document.getElementById('birthMonth').value;
+    document.getElementById('btn-pre').disabled = !(y && m);
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function startQuestions() {
+    preData.birthYear = document.getElementById('birthYear').value;
+    preData.birthMonth = document.getElementById('birthMonth').value;
+    preData.books = document.getElementById('recentBooks').value || '特になし';
+    currentQ = 0;
+    renderQuestion();
+    showScreen('screen-questions');
+  }
+
+  function renderQuestion() {
+    const q = QUESTIONS[currentQ];
+    // progress bars
+    const prog = document.getElementById('progress');
+    prog.innerHTML = QUESTIONS.map((_, i) =>
+      `<div class="progress-bar" style="background:${i <= currentQ ? '#9E8A72' : '#E8E0D4'}"></div>`
+    ).join('');
+
+    document.getElementById('q-label').textContent = `${q.label}　${q.num} / ${QUESTIONS.length}`;
+    document.getElementById('q-text').textContent = q.question;
+    document.getElementById('q-hint').textContent = q.hint;
+    document.getElementById('q-error').style.display = 'none';
+
+    const ta = document.getElementById('q-answer');
+    ta.value = answers[q.id];
+    ta.placeholder = q.placeholder;
+
+    const isLast = currentQ === QUESTIONS.length - 1;
+    const btn = document.getElementById('btn-next');
+    btn.textContent = isLast ? '選書する' : '次へ →';
+    btn.disabled = !answers[q.id].trim();
+  }
+
+  function onAnswerInput() {
+    const q = QUESTIONS[currentQ];
+    answers[q.id] = document.getElementById('q-answer').value;
+    document.getElementById('btn-next').disabled = !answers[q.id].trim();
+  }
+
+  function prevQuestion() {
+    if (currentQ > 0) {
+      currentQ--;
+      renderQuestion();
+    } else {
+      showScreen('screen-pre');
+    }
+  }
+
+  function nextQuestion() {
+    if (currentQ < QUESTIONS.length - 1) {
+      currentQ++;
+      renderQuestion();
+    } else {
+      fetchSelection();
+    }
+  }
+
+  function buildPrompt() {
+    return `あなたはBOOKS Terminalという選書サービスのAIです。以下のユーザー情報をもとに、この人のためだけの選書を行ってください。
+
+【事前情報】
+生年月日：${preData.birthYear}年${preData.birthMonth}月生まれ
+既読の本：${preData.books}
+
+【ヒアリング回答】
+Q1（子どもの頃繰り返し読んだ本・原体験）：${answers.q1}
+Q2（今の自分にそっと足してあげたいもの・欠乏感）：${answers.q2}
+Q3（魔法でなれるとしたらどんな人・変身願望）：${answers.q3}
+
+【選書のルール】
+- 回答の内容だけでなく「答え方」（長さ・語彙・感情的か論理的か）も読む
+- Big Five心理学でプロファイリングする
+- 既読の本と重複しないこと
+- 5冊選ぶ：本命・気づき・挑戦・癒し・意外性
+
+以下のJSON形式のみで返してください。前置きや説明は不要です。
+
+{
+  "profile": "この人への2〜3文のプロファイル（核心を突く、温かく鋭い言葉で）",
+  "books": [
+    { "role": "本命", "title": "書名", "author": "著者名", "reason": "なぜこの人に届けるか（40字程度）" },
+    { "role": "気づき", "title": "書名", "author": "著者名", "reason": "なぜこの人に届けるか（40字程度）" },
+    { "role": "挑戦", "title": "書名", "author": "著者名", "reason": "なぜこの人に届けるか（40字程度）" },
+    { "role": "癒し", "title": "書名", "author": "著者名", "reason": "なぜこの人に届けるか（40字程度）" },
+    { "role": "意外性", "title": "書名", "author": "著者名", "reason": "なぜこの人に届けるか（40字程度）" }
+  ]
+}`;
+  }
+
+  const LOADING_TEXTS = [
+    'あなたを読んでいます…',
+    '原体験を辿っています…',
+    '欠乏感のかたちを読み取っています…',
+    'プロファイルを描いています…',
+    '5冊の本を探しています…',
+    '見つかりました。'
+  ];
+
+  async function fetchSelection() {
+    showScreen('screen-loading');
+    document.getElementById('q-error').style.display = 'none';
+
+    // Loading text animation
+    let i = 0;
+    document.getElementById('loading-text').textContent = LOADING_TEXTS[0];
+    const interval = setInterval(() => {
+      i++;
+      if (i < LOADING_TEXTS.length) {
+        document.getElementById('loading-text').textContent = LOADING_TEXTS[i];
+      }
+    }, 2000);
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [{ role: 'user', content: buildPrompt() }]
+        })
+      });
+
+      const data = await res.json();
+      clearInterval(interval);
+
+      const text = data.content.map(i => i.text || '').join('');
+      const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+      renderResult(parsed);
+      showScreen('screen-result');
+    } catch (e) {
+      clearInterval(interval);
+      showScreen('screen-questions');
+      document.getElementById('q-error').textContent = '選書中にエラーが発生しました。もう一度お試しください。';
+      document.getElementById('q-error').style.display = 'block';
+    }
+  }
+
+  function renderResult(result) {
+    document.getElementById('result-profile').textContent = result.profile;
+
+    const roles = ['本命','気づき','挑戦','癒し','意外性'];
+    const booksEl = document.getElementById('result-books');
+    booksEl.innerHTML = result.books.map((book, i) => `
+      <div class="book">
+        <div class="book-icon">${BOOK_ICONS[i]}</div>
+        <div style="flex:1">
+          <div class="book-role" style="color:${ROLE_COLORS[i]}">${roles[i]}</div>
+          <div class="book-title">${book.title}</div>
+          <div class="book-author">${book.author}</div>
+          <div class="book-reason">${book.reason}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function reset() {
+    answers.q1 = ''; answers.q2 = ''; answers.q3 = '';
+    preData = { birthYear: '', birthMonth: '', books: '' };
+    document.getElementById('birthYear').value = '';
+    document.getElementById('birthMonth').value = '';
+    document.getElementById('recentBooks').value = '';
+    document.getElementById('btn-pre').disabled = true;
+    currentQ = 0;
+    showScreen('screen-intro');
+  }
+</script>
+</body>
+</html>
