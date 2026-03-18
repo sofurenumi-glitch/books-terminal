@@ -1,119 +1,74 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" style="color-scheme: light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
   <title>BOOKS Terminal</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
+      color-scheme: light;
       --cream: #F8F4EE;
       --cream-dark: #F0EBE3;
-      --brown: #2E2822;
-      --brown-mid: #60503F;
-      --brown-light: #8A7A6A;
-      --brown-pale: #D8CEC2;
-      --accent: #7D6A52;
+      --brown: #3A322C;
+      --brown-mid: #7A6A5A;
+      --brown-light: #B8A898;
+      --brown-pale: #E0D8CE;
+      --accent: #9E8A72;
       --card: #FDFAF6;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --cream: #F8F4EE;
+        --cream-dark: #F0EBE3;
+        --brown: #3A322C;
+        --brown-mid: #7A6A5A;
+        --brown-light: #B8A898;
+        --brown-pale: #E0D8CE;
+        --accent: #9E8A72;
+        --card: #FDFAF6;
+      }
     }
 
     body {
       background: var(--cream);
+      background-color: #F8F4EE !important;
       font-family: 'Noto Serif JP', Georgia, serif;
       color: var(--brown);
+      color: #3A322C !important;
       min-height: 100vh;
     }
 
-    .screen {
-      display: none;
-      min-height: 100vh;
-      align-items: center;
-      justify-content: center;
-      padding: 48px 24px;
-      flex-direction: column;
-    }
+    .screen { display: none; min-height: 100vh; align-items: center; justify-content: center; padding: 48px 24px; flex-direction: column; }
     .screen.active { display: flex; }
 
     .container { max-width: 460px; width: 100%; }
     .container-wide { max-width: 560px; width: 100%; margin: 0 auto; padding: 64px 24px; }
 
-    .eyebrow {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 10px;
-      letter-spacing: 5px;
-      color: var(--brown-light);
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
+    .eyebrow { font-family: 'Cormorant Garamond', serif; font-size: 10px; letter-spacing: 5px; color: var(--brown-light); text-transform: uppercase; margin-bottom: 20px; }
 
     .logo { font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 300; color: var(--brown); letter-spacing: -1px; line-height: 1; margin-bottom: 2px; text-align: center; }
     .logo-sub { font-family: 'Cormorant Garamond', serif; font-size: 15px; letter-spacing: 9px; color: var(--brown-light); margin-bottom: 44px; text-align: center; }
-
     .divider { width: 1px; height: 56px; background: linear-gradient(to bottom, transparent, var(--brown-pale), transparent); margin: 0 auto 44px; }
 
     .body-text { color: var(--brown-mid); font-size: 14px; line-height: 2.4; margin-bottom: 44px; font-weight: 300; text-align: center; }
     .italic { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--brown-light); font-size: 13px; }
 
-    .btn {
-      background: var(--brown);
-      border: none;
-      color: var(--cream);
-      padding: 15px 48px;
-      font-size: 11px;
-      letter-spacing: 4px;
-      cursor: pointer;
-      font-family: 'Noto Serif JP', serif;
-      transition: background 0.3s;
-      width: 100%;
-    }
+    .btn { background: var(--brown); border: none; color: var(--cream); padding: 15px 48px; font-size: 11px; letter-spacing: 4px; cursor: pointer; font-family: 'Noto Serif JP', serif; transition: background 0.3s; width: 100%; }
     .btn:hover { background: #564840; }
     .btn:disabled { background: var(--brown-pale); color: var(--brown-light); cursor: default; }
     .btn-sm { width: auto; padding: 14px 36px; }
-    .btn-outline {
-      background: transparent;
-      border: 1px solid var(--brown-pale);
-      color: var(--accent);
-      padding: 13px 40px;
-      font-size: 11px;
-      letter-spacing: 3px;
-      cursor: pointer;
-      font-family: 'Noto Serif JP', serif;
-      transition: all 0.3s;
-    }
+    .btn-outline { background: transparent; border: 1px solid var(--brown-pale); color: var(--accent); padding: 13px 40px; font-size: 11px; letter-spacing: 3px; cursor: pointer; font-family: 'Noto Serif JP', serif; transition: all 0.3s; }
     .btn-outline:hover { border-color: var(--accent); color: var(--brown); }
 
     .field { margin-bottom: 32px; }
     .label { font-size: 10px; letter-spacing: 3px; color: var(--brown-light); display: block; margin-bottom: 12px; text-transform: uppercase; }
-    .input {
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid var(--brown-pale);
-      color: var(--brown);
-      padding: 10px 0;
-      font-size: 15px;
-      outline: none;
-      font-family: 'Noto Serif JP', serif;
-      transition: border-color 0.3s;
-      width: 100%;
-    }
+    .input { background: transparent; border: none; border-bottom: 1px solid var(--brown-pale); color: var(--brown); padding: 10px 0; font-size: 15px; outline: none; font-family: 'Noto Serif JP', serif; transition: border-color 0.3s; width: 100%; }
     .input:focus { border-bottom-color: var(--accent); }
     .input::placeholder { color: var(--brown-pale); }
-    .textarea {
-      background: transparent;
-      border: none;
-      border-bottom: 1px solid var(--brown-pale);
-      color: var(--brown);
-      padding: 12px 0;
-      font-size: 15px;
-      outline: none;
-      resize: none;
-      font-family: 'Noto Serif JP', serif;
-      line-height: 2;
-      width: 100%;
-      transition: border-color 0.3s;
-    }
+    .textarea { background: transparent; border: none; border-bottom: 1px solid var(--brown-pale); color: var(--brown); padding: 12px 0; font-size: 15px; outline: none; resize: none; font-family: 'Noto Serif JP', serif; line-height: 2; width: 100%; transition: border-color 0.3s; }
     .textarea:focus { border-bottom-color: var(--accent); }
     .textarea::placeholder { color: var(--brown-pale); }
     .hint { color: var(--brown-light); font-size: 12px; margin-top: 8px; font-style: italic; font-family: 'Cormorant Garamond', serif; }
@@ -133,7 +88,7 @@
     .loading-text { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--accent); font-size: 15px; letter-spacing: 2px; text-align: center; }
 
     .profile-card { background: var(--card); border-left: 2px solid var(--brown-pale); padding: 22px 26px; margin-bottom: 48px; }
-    .profile-text { color: #3E2E24; font-size: 14px; line-height: 2.3; font-weight: 300; }
+    .profile-text { color: #5A4A3E; font-size: 14px; line-height: 2.3; font-weight: 300; }
 
     .book { display: flex; gap: 18px; padding: 26px 0; border-bottom: 1px solid #EDE6DA; align-items: flex-start; }
     .book-icon { font-size: 18px; flex-shrink: 0; margin-top: 4px; }
@@ -148,200 +103,54 @@
     .row { display: flex; gap: 12px; align-items: flex-end; }
     .unit { color: var(--brown-light); font-size: 14px; padding-bottom: 10px; flex-shrink: 0; }
     .error-text { color: #B85A4A; font-size: 12px; margin-top: 10px; }
-
     .result-header { text-align: center; margin-bottom: 48px; }
 
-    /* High-res render mode for canvas export */
-    #share-card.hires .share-card-logo { font-size: 38px; }
-    #share-card.hires .share-card-logo-sub { font-size: 14px; letter-spacing: 8px; margin-bottom: 32px; }
-    #share-card.hires .share-card-divider { margin-bottom: 32px; }
-    #share-card.hires .share-card-profile { font-size: 17px; line-height: 2; margin-bottom: 32px; padding-left: 18px; }
-    #share-card.hires .share-card-books { gap: 18px; }
-    #share-card.hires .share-card-book-role { font-size: 12px; letter-spacing: 3px; width: 56px; }
-    #share-card.hires .share-card-book-title { font-size: 17px; }
-    #share-card.hires .share-card-book-author { font-size: 13px; }
-    #share-card.hires .share-card-footer { margin-top: 32px; padding-top: 20px; }
-    #share-card.hires .share-card-tagline { font-size: 13px; }
-    #share-card.hires .share-card-url { font-size: 13px; letter-spacing: 2px; }
-
-    /* Share button */
-    .btn-share {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--brown);
-      border: none;
-      color: var(--cream);
-      padding: 14px 36px;
-      font-size: 11px;
-      letter-spacing: 3px;
-      cursor: pointer;
-      font-family: 'Noto Serif JP', serif;
-      transition: background 0.3s;
-      margin-bottom: 16px;
-      width: 100%;
-      justify-content: center;
-    }
+    /* ── Share button ── */
+    .btn-share { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--brown); border: none; color: var(--cream); padding: 14px 36px; font-size: 11px; letter-spacing: 3px; cursor: pointer; font-family: 'Noto Serif JP', serif; transition: background 0.3s; margin-bottom: 16px; width: 100%; }
     .btn-share:hover { background: #564840; }
-    .btn-share svg { opacity: 0.7; }
 
-    /* Share modal overlay */
-    .share-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(30,22,16,0.82);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
+    /* ── Share modal ── */
+    .share-overlay { display: none; position: fixed; inset: 0; background: rgba(30,22,16,0.82); z-index: 100; align-items: center; justify-content: center; padding: 24px; }
     .share-overlay.active { display: flex; }
+    .share-modal { background: var(--card); max-width: 420px; width: 100%; padding: 36px 28px 28px; }
+    .share-modal-title { font-family: 'Cormorant Garamond', serif; font-size: 11px; letter-spacing: 5px; color: var(--brown-light); text-transform: uppercase; margin-bottom: 24px; text-align: center; }
 
-    .share-modal {
-      background: var(--card);
-      max-width: 420px;
-      width: 100%;
-      padding: 36px 28px 28px;
-      position: relative;
-    }
+    /* ── Share card (canvas target) ── */
+    #share-card { background: var(--cream); width: 100%; aspect-ratio: 9/16; max-height: 55vh; overflow: hidden; display: flex; flex-direction: column; padding: 32px 28px 28px; box-sizing: border-box; }
+    .sc-logo { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 300; letter-spacing: 2px; color: var(--brown); margin-bottom: 2px; }
+    .sc-logo-sub { font-family: 'Cormorant Garamond', serif; font-size: 9px; letter-spacing: 6px; color: var(--brown-light); text-transform: uppercase; margin-bottom: 20px; }
+    .sc-divider { width: 24px; height: 1px; background: var(--brown-pale); margin-bottom: 20px; }
+    .sc-profile { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--brown-mid); font-size: 11px; line-height: 1.8; margin-bottom: 20px; border-left: 2px solid var(--brown-pale); padding-left: 12px; }
+    .sc-books { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .sc-book { display: flex; align-items: baseline; gap: 8px; }
+    .sc-role { font-family: 'Cormorant Garamond', serif; font-size: 8px; letter-spacing: 2px; color: var(--brown-light); text-transform: uppercase; flex-shrink: 0; width: 38px; }
+    .sc-title { font-size: 11px; color: var(--brown); font-weight: 400; line-height: 1.4; }
+    .sc-author { font-size: 9px; color: var(--brown-light); flex-shrink: 0; }
+    .sc-footer { margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--brown-pale); display: flex; justify-content: space-between; align-items: flex-end; }
+    .sc-tagline { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 9px; color: var(--brown-light); }
+    .sc-url { font-family: 'Cormorant Garamond', serif; font-size: 9px; letter-spacing: 1px; color: var(--brown-light); }
 
-    .share-modal-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 11px;
-      letter-spacing: 5px;
-      color: var(--brown-light);
-      text-transform: uppercase;
-      margin-bottom: 24px;
-      text-align: center;
-    }
+    /* hires render */
+    #share-card.hires { width: 540px !important; height: 960px !important; max-height: none !important; padding: 64px 52px 52px !important; }
+    #share-card.hires .sc-logo { font-size: 38px; }
+    #share-card.hires .sc-logo-sub { font-size: 14px; letter-spacing: 8px; margin-bottom: 32px; }
+    #share-card.hires .sc-divider { margin-bottom: 32px; }
+    #share-card.hires .sc-profile { font-size: 17px; line-height: 2; margin-bottom: 32px; padding-left: 18px; }
+    #share-card.hires .sc-books { gap: 18px; }
+    #share-card.hires .sc-role { font-size: 12px; letter-spacing: 3px; width: 56px; }
+    #share-card.hires .sc-title { font-size: 17px; }
+    #share-card.hires .sc-author { font-size: 13px; }
+    #share-card.hires .sc-footer { margin-top: 32px; padding-top: 20px; }
+    #share-card.hires .sc-tagline { font-size: 13px; }
+    #share-card.hires .sc-url { font-size: 13px; letter-spacing: 2px; }
 
-    /* The share card itself — this gets rendered to canvas */
-    #share-card {
-      background: var(--cream);
-      width: 100%;
-      aspect-ratio: 9/16;
-      max-height: 55vh;
-      overflow: hidden;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      padding: 32px 28px 28px;
-      box-sizing: border-box;
-    }
-
-    .share-card-logo {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 22px;
-      font-weight: 300;
-      letter-spacing: 2px;
-      color: var(--brown);
-      margin-bottom: 2px;
-    }
-    .share-card-logo-sub {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 9px;
-      letter-spacing: 6px;
-      color: var(--brown-light);
-      text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-    .share-card-divider {
-      width: 24px;
-      height: 1px;
-      background: var(--brown-pale);
-      margin-bottom: 20px;
-    }
-    .share-card-profile {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      color: var(--brown-mid);
-      font-size: 11px;
-      line-height: 1.8;
-      margin-bottom: 20px;
-      border-left: 2px solid var(--brown-pale);
-      padding-left: 12px;
-    }
-    .share-card-books {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .share-card-book {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-    }
-    .share-card-book-role {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 8px;
-      letter-spacing: 2px;
-      color: var(--brown-light);
-      text-transform: uppercase;
-      flex-shrink: 0;
-      width: 38px;
-    }
-    .share-card-book-title {
-      font-size: 11px;
-      color: var(--brown);
-      font-weight: 400;
-      line-height: 1.4;
-    }
-    .share-card-book-author {
-      font-size: 9px;
-      color: var(--brown-light);
-      flex-shrink: 0;
-    }
-    .share-card-footer {
-      margin-top: 20px;
-      padding-top: 14px;
-      border-top: 1px solid var(--brown-pale);
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-    }
-    .share-card-tagline {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: 9px;
-      color: var(--brown-light);
-      letter-spacing: 0.5px;
-    }
-    .share-card-url {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 9px;
-      letter-spacing: 1px;
-      color: var(--brown-light);
-    }
-
-    /* Modal actions */
-    .share-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
-    }
-    .share-actions button {
-      flex: 1;
-      padding: 12px;
-      font-size: 10px;
-      letter-spacing: 2px;
-      cursor: pointer;
-      font-family: 'Noto Serif JP', serif;
-      transition: all 0.3s;
-    }
-    .btn-download {
-      background: var(--brown);
-      border: none;
-      color: var(--cream);
-    }
-    .btn-download:hover { background: #564840; }
-    .btn-cancel {
-      background: transparent;
-      border: 1px solid var(--brown-pale);
-      color: var(--accent);
-    }
-    .btn-cancel:hover { border-color: var(--accent); }
+    /* modal actions */
+    .share-actions { display: flex; gap: 10px; margin-top: 20px; }
+    .share-actions button { flex: 1; padding: 12px; font-size: 10px; letter-spacing: 2px; cursor: pointer; font-family: 'Noto Serif JP', serif; transition: all 0.3s; }
+    .btn-dl { background: var(--brown); border: none; color: var(--cream); }
+    .btn-dl:hover { background: #564840; }
+    .btn-cl { background: transparent; border: 1px solid var(--brown-pale); color: var(--accent); }
+    .btn-cl:hover { border-color: var(--accent); }
   </style>
 </head>
 <body>
@@ -356,7 +165,7 @@
     <p class="body-text">
       3つの質問に答えるだけで、<br>
       あなたのためだけの5冊が届きます。<br>
-      <span class="italic">本と出会うことは、自分と出会うことだ。</span>
+      <span class="italic">初期値は、愛。</span>
     </p>
     <button class="btn" onclick="showScreen('screen-pre')">選書をはじめる</button>
   </div>
@@ -368,7 +177,6 @@
     <div class="eyebrow">Pre-information</div>
     <h2 style="font-size:20px;font-weight:400;margin-bottom:8px">まず、少しだけ教えてください。</h2>
     <p class="italic" style="display:block;margin-bottom:44px;line-height:2">あなたのことを、もう少し知らせてください。</p>
-
     <div class="field">
       <label class="label">生年月日</label>
       <div class="row">
@@ -378,13 +186,11 @@
         <span class="unit">月生まれ</span>
       </div>
     </div>
-
     <div class="field" style="margin-bottom:44px">
       <label class="label">最近読んだ本（3冊まで）</label>
       <textarea class="textarea" id="recentBooks" rows="3" placeholder="例：嫌われる勇気、三体、ぼのぼの…"></textarea>
       <p class="hint">「最近読んでいない」でも大丈夫です。</p>
     </div>
-
     <button class="btn" id="btn-pre" onclick="startQuestions()" disabled>次へ進む</button>
   </div>
 </div>
@@ -397,7 +203,7 @@
     <h2 class="question" id="q-text"></h2>
     <p class="question-hint" id="q-hint"></p>
     <textarea class="textarea" id="q-answer" rows="5" oninput="onAnswerInput()"></textarea>
-    <div id="depth-hint" style="margin-top:10px;min-height:20px;display:flex;justify-content:space-between;align-items:center">
+    <div style="margin-top:10px;min-height:20px;display:flex;justify-content:space-between;align-items:center">
       <span id="depth-msg" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:var(--brown-light);transition:color 0.4s"></span>
       <span id="char-count" style="font-family:'Cormorant Garamond',serif;font-size:11px;color:var(--brown-pale);letter-spacing:1px"></span>
     </div>
@@ -429,7 +235,7 @@
     <div class="footer">
       <p class="footer-text">ここで新たな本と出会い、人と出会い、学びと出会う。</p>
       <button class="btn-share" onclick="openShareModal()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.7"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
         シェア用カードをつくる
       </button>
       <button class="btn-outline" onclick="reset()">もう一度試す</button>
@@ -443,64 +249,54 @@
 <!-- SHARE MODAL -->
 <div class="share-overlay" id="share-overlay" onclick="closeShareModalOutside(event)">
   <div class="share-modal">
-    <div class="share-modal-title">Share Card</div>
+    <div class="share-modal-title" id="share-modal-title">Share Card</div>
 
     <div id="share-card">
-      <!-- top: logo -->
-      <div class="share-card-logo">BOOKS</div>
-      <div class="share-card-logo-sub">Terminal</div>
-      <div class="share-card-divider"></div>
-
-      <!-- profile -->
-      <div class="share-card-profile" id="sc-profile"></div>
-
-      <!-- books list -->
-      <div class="share-card-books" id="sc-books"></div>
-
-      <!-- footer -->
-      <div class="share-card-footer">
-        <div class="share-card-tagline">本と出会うことは、自分と出会うことだ。</div>
-        <div class="share-card-url">books-terminal.vercel.app</div>
+      <div class="sc-logo">BOOKS</div>
+      <div class="sc-logo-sub">Terminal</div>
+      <div class="sc-divider"></div>
+      <div class="sc-profile" id="sc-profile"></div>
+      <div class="sc-books" id="sc-books"></div>
+      <div class="sc-footer">
+        <div class="sc-tagline">本と出会うことは、自分と出会うことだ。</div>
+        <div class="sc-url">books-terminal.vercel.app</div>
       </div>
     </div>
 
-    <div class="share-actions">
-      <button class="btn-download" onclick="downloadCard()">画像を保存</button>
-      <button class="btn-cancel" onclick="closeShareModal()">閉じる</button>
+    <div class="share-actions" id="share-actions-default">
+      <button class="btn-dl" onclick="generateCard()">画像を生成する</button>
+      <button class="btn-cl" onclick="closeShareModal()">閉じる</button>
+    </div>
+
+    <div id="share-actions-preview" style="display:none">
+      <img id="share-preview-img" src="" alt="選書カード" style="width:100%;display:block;margin-bottom:12px">
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:var(--brown-light);text-align:center;margin-bottom:16px;letter-spacing:0.5px">
+        画像を長押し（または右クリック）して写真に保存できます
+      </p>
+      <div style="display:flex;gap:10px">
+        <button class="btn-dl" onclick="resetShareModal()" style="flex:1">もう一度生成</button>
+        <button class="btn-cl" onclick="closeShareModal()" style="flex:1">閉じる</button>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
   const QUESTIONS = [
-    {
-      id: 'q1', label: 'Q1　原体験', num: 1,
-      question: '子どもの頃、何度も読み返した本や物語を教えてください。',
-      hint: 'マンガ・絵本・アニメの原作でも。「読んでいなかった」でも大丈夫です。',
-      placeholder: '例：ドラえもん、ハリーポッター、読んでいなかった…など'
-    },
-    {
-      id: 'q2', label: 'Q2　欠乏感', num: 2,
-      question: '今の自分に、そっと足してあげたいものがあるとしたら、何でしょう？',
-      hint: '感情でも、能力でも、時間でも。思いつくままに。',
-      placeholder: '例：勇気、余白、仲間、答え…など'
-    },
-    {
-      id: 'q3', label: 'Q3　変身願望', num: 3,
-      question: 'もし今夜、魔法で誰にでもなれるとしたら、どんな人になりたいですか？',
-      hint: '実在の人物でも、架空のキャラクターでも、抽象的な像でも。',
-      placeholder: '例：スティーブ・ジョブズ、自由に生きている人…など'
-    }
+    { id: 'q1', label: 'Q1　原体験', num: 1, question: '子どもの頃、何度も読み返した本や物語を教えてください。', hint: 'マンガ・絵本・アニメの原作でも。「読んでいなかった」でも大丈夫です。', placeholder: '例：ドラえもん、ハリーポッター、読んでいなかった…など' },
+    { id: 'q2', label: 'Q2　欠乏感', num: 2, question: '今の自分に、そっと足してあげたいものがあるとしたら、何でしょう？', hint: '感情でも、能力でも、時間でも。思いつくままに。', placeholder: '例：勇気、余白、仲間、答え…など' },
+    { id: 'q3', label: 'Q3　変身願望', num: 3, question: 'もし今夜、魔法で誰にでもなれるとしたら、どんな人になりたいですか？', hint: '実在の人物でも、架空のキャラクターでも、抽象的な像でも。', placeholder: '例：スティーブ・ジョブズ、自由に生きている人…など' }
   ];
 
   const BOOK_ICONS = ['📌','🌱','🚀','🌿','✨'];
   const ROLE_COLORS = ['#8B6F4E','#5A8A6A','#6A7FA8','#7A9E8A','#9E7A5A'];
+  const ROLE_LABELS = ['本命','気づき','挑戦','癒し','意外性'];
 
   let currentQ = 0;
   const answers = { q1: '', q2: '', q3: '' };
   let preData = { birthYear: '', birthMonth: '', books: '' };
+  let currentResult = null;
 
-  // Pre screen validation
   document.getElementById('birthYear').addEventListener('input', validatePre);
   document.getElementById('birthMonth').addEventListener('input', validatePre);
 
@@ -527,26 +323,20 @@
 
   function renderQuestion() {
     const q = QUESTIONS[currentQ];
-    // progress bars
     const prog = document.getElementById('progress');
     prog.innerHTML = QUESTIONS.map((_, i) =>
       `<div class="progress-bar" style="background:${i <= currentQ ? '#9E8A72' : '#E8E0D4'}"></div>`
     ).join('');
-
     document.getElementById('q-label').textContent = `${q.label}　${q.num} / ${QUESTIONS.length}`;
     document.getElementById('q-text').textContent = q.question;
     document.getElementById('q-hint').textContent = q.hint;
     document.getElementById('q-error').style.display = 'none';
-
     const ta = document.getElementById('q-answer');
     ta.value = answers[q.id];
     ta.placeholder = q.placeholder;
-
-    // reset depth hint then re-evaluate if answer already exists
     document.getElementById('depth-msg').textContent = '';
     document.getElementById('char-count').textContent = '';
     if (answers[q.id]) onAnswerInput();
-
     const isLast = currentQ === QUESTIONS.length - 1;
     const btn = document.getElementById('btn-next');
     btn.textContent = isLast ? '選書する' : '次へ →';
@@ -558,48 +348,25 @@
     const val = document.getElementById('q-answer').value;
     answers[q.id] = val;
     document.getElementById('btn-next').disabled = !val.trim();
-
-    // depth hint
     const len = val.trim().length;
     const msg = document.getElementById('depth-msg');
     const cnt = document.getElementById('char-count');
-
     cnt.textContent = len > 0 ? `${len}字` : '';
-
-    if (len === 0) {
-      msg.textContent = '';
-      msg.style.color = 'var(--brown-pale)';
-    } else if (len < 15) {
-      msg.textContent = '少し詳しく教えてもらえると、より深い選書ができます。';
-      msg.style.color = 'var(--brown-light)';
-    } else if (len < 50) {
-      msg.textContent = 'もう少し言葉を重ねると、あなたの輪郭が見えてきます。';
-      msg.style.color = 'var(--accent)';
-    } else if (len < 120) {
-      msg.textContent = 'あなたのことが、だんだん見えてきました。';
-      msg.style.color = 'var(--brown-mid)';
-    } else {
-      msg.textContent = '深く語ってくれました。この言葉から選書します。';
-      msg.style.color = 'var(--brown)';
-    }
+    if (len === 0) { msg.textContent = ''; msg.style.color = 'var(--brown-pale)'; }
+    else if (len < 15) { msg.textContent = '少し詳しく教えてもらえると、より深い選書ができます。'; msg.style.color = 'var(--brown-light)'; }
+    else if (len < 50) { msg.textContent = 'もう少し言葉を重ねると、あなたの輪郭が見えてきます。'; msg.style.color = 'var(--accent)'; }
+    else if (len < 120) { msg.textContent = 'あなたのことが、だんだん見えてきました。'; msg.style.color = 'var(--brown-mid)'; }
+    else { msg.textContent = '深く語ってくれました。この言葉から選書します。'; msg.style.color = 'var(--brown)'; }
   }
 
   function prevQuestion() {
-    if (currentQ > 0) {
-      currentQ--;
-      renderQuestion();
-    } else {
-      showScreen('screen-pre');
-    }
+    if (currentQ > 0) { currentQ--; renderQuestion(); }
+    else { showScreen('screen-pre'); }
   }
 
   function nextQuestion() {
-    if (currentQ < QUESTIONS.length - 1) {
-      currentQ++;
-      renderQuestion();
-    } else {
-      fetchSelection();
-    }
+    if (currentQ < QUESTIONS.length - 1) { currentQ++; renderQuestion(); }
+    else { fetchSelection(); }
   }
 
   function buildPrompt() {
@@ -634,61 +401,25 @@ Q3（魔法でなれるとしたらどんな人・変身願望）：${answers.q3
 }`;
   }
 
-  const LOADING_TEXTS = [
-    'あなたを読んでいます…',
-    '原体験を辿っています…',
-    '欠乏感のかたちを読み取っています…',
-    'プロファイルを描いています…',
-    '5冊の本を探しています…',
-    '見つかりました。'
-  ];
+  const LOADING_TEXTS = ['あなたを読んでいます…','原体験を辿っています…','欠乏感のかたちを読み取っています…','プロファイルを描いています…','5冊の本を探しています…','見つかりました。'];
 
   async function fetchSelection() {
     showScreen('screen-loading');
     document.getElementById('q-error').style.display = 'none';
-
-    // Loading text animation
     let i = 0;
     document.getElementById('loading-text').textContent = LOADING_TEXTS[0];
-    const interval = setInterval(() => {
-      i++;
-      if (i < LOADING_TEXTS.length) {
-        document.getElementById('loading-text').textContent = LOADING_TEXTS[i];
-      }
-    }, 2000);
-
+    const interval = setInterval(() => { i++; if (i < LOADING_TEXTS.length) document.getElementById('loading-text').textContent = LOADING_TEXTS[i]; }, 2000);
     try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: [{ role: 'user', content: buildPrompt() }]
-        })
-      });
-
+      const res = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: [{ role: 'user', content: buildPrompt() }] }) });
       const data = await res.json();
       clearInterval(interval);
-
-      if (data.error) {
-        throw new Error('APIエラー: ' + JSON.stringify(data.error));
-      }
-      if (!data.content) {
-        throw new Error('contentなし: ' + JSON.stringify(data).substring(0, 300));
-      }
-
+      if (data.error) throw new Error('APIエラー: ' + JSON.stringify(data.error));
+      if (!data.content) throw new Error('contentなし: ' + JSON.stringify(data).substring(0, 300));
       const text = data.content.map(i => i.text || '').join('');
-      if (!text) {
-        throw new Error('テキストなし');
-      }
-
+      if (!text) throw new Error('テキストなし');
       const cleaned = text.replace(/```json|```/g, '').trim();
       let parsed;
-      try {
-        parsed = JSON.parse(cleaned);
-      } catch (jsonErr) {
-        throw new Error('JSONパース失敗: ' + cleaned.substring(0, 200));
-      }
-
+      try { parsed = JSON.parse(cleaned); } catch (e) { throw new Error('JSONパース失敗: ' + cleaned.substring(0, 200)); }
       renderResult(parsed);
       showScreen('screen-result');
     } catch (e) {
@@ -700,21 +431,18 @@ Q3（魔法でなれるとしたらどんな人・変身願望）：${answers.q3
   }
 
   function amazonUrl(title, author) {
-    const q = encodeURIComponent(`${title} ${author}`);
-    return `https://www.amazon.co.jp/s?k=${q}&tag=kentaro087-22`;
+    return `https://www.amazon.co.jp/s?k=${encodeURIComponent(title + ' ' + author)}&tag=kentaro087-22`;
   }
 
   function renderResult(result) {
     currentResult = result;
     document.getElementById('result-profile').textContent = result.profile;
-
-    const roles = ['本命','気づき','挑戦','癒し','意外性'];
     const booksEl = document.getElementById('result-books');
     booksEl.innerHTML = result.books.map((book, i) => `
       <div class="book">
         <div class="book-icon">${BOOK_ICONS[i]}</div>
         <div style="flex:1">
-          <div class="book-role" style="color:${ROLE_COLORS[i]}">${roles[i]}</div>
+          <div class="book-role" style="color:${ROLE_COLORS[i]}">${ROLE_LABELS[i]}</div>
           <div class="book-title">${book.title}</div>
           <div class="book-author">${book.author}</div>
           <div class="book-reason">${book.reason}</div>
@@ -740,26 +468,18 @@ Q3（魔法でなれるとしたらどんな人・変身願望）：${answers.q3
     showScreen('screen-intro');
   }
 
-  // ── Share card ──────────────────────────────────────────
-  let currentResult = null;
-
-  const ROLE_LABELS = ['本命','気づき','挑戦','癒し','意外性'];
-
+  // ── Share ───────────────────────────────────────────────
   function openShareModal() {
     if (!currentResult) return;
-
-    // populate share card
     document.getElementById('sc-profile').textContent = currentResult.profile;
-
-    const booksEl = document.getElementById('sc-books');
-    booksEl.innerHTML = currentResult.books.map((b, i) => `
-      <div class="share-card-book">
-        <div class="share-card-book-role">${ROLE_LABELS[i]}</div>
-        <div class="share-card-book-title">${b.title}</div>
-        <div class="share-card-book-author">${b.author}</div>
+    document.getElementById('sc-books').innerHTML = currentResult.books.map((b, i) => `
+      <div class="sc-book">
+        <div class="sc-role">${ROLE_LABELS[i]}</div>
+        <div class="sc-title">${b.title}</div>
+        <div class="sc-author">${b.author}</div>
       </div>
     `).join('');
-
+    resetShareModal();
     document.getElementById('share-overlay').classList.add('active');
   }
 
@@ -771,13 +491,21 @@ Q3（魔法でなれるとしたらどんな人・変身願望）：${answers.q3
     if (e.target === document.getElementById('share-overlay')) closeShareModal();
   }
 
-  async function downloadCard() {
-    const btn = document.querySelector('.btn-download');
+  function resetShareModal() {
+    document.getElementById('share-actions-preview').style.display = 'none';
+    document.getElementById('share-card').style.display = '';
+    document.getElementById('share-actions-default').style.display = 'flex';
+    document.getElementById('share-modal-title').textContent = 'Share Card';
+    const btn = document.querySelector('#share-actions-default .btn-dl');
+    btn.textContent = '画像を生成する';
+    btn.disabled = false;
+  }
+
+  async function generateCard() {
+    const btn = document.querySelector('#share-actions-default .btn-dl');
     btn.textContent = '生成中…';
     btn.disabled = true;
-
     try {
-      // dynamically load html2canvas if not loaded
       if (!window.html2canvas) {
         await new Promise((res, rej) => {
           const s = document.createElement('script');
@@ -786,58 +514,31 @@ Q3（魔法でなれるとしたらどんな人・変身願望）：${answers.q3
           document.head.appendChild(s);
         });
       }
-
       const card = document.getElementById('share-card');
-      // temporarily expand to full resolution for crisp output
-      const origStyle = card.getAttribute('style') || '';
-      card.style.width = '540px';
-      card.style.height = '960px';
-      card.style.maxHeight = 'none';
-      card.style.padding = '64px 52px 52px';
-
-      // scale font sizes up proportionally for high-res
       card.classList.add('hires');
-
-      await new Promise(r => setTimeout(r, 80)); // let layout settle
-
-      const canvas = await html2canvas(card, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: '#F8F4EE',
-        logging: false
-      });
-
-      // restore
-      card.setAttribute('style', origStyle);
+      await new Promise(r => setTimeout(r, 100));
+      const canvas = await html2canvas(card, { scale: 2, useCORS: true, backgroundColor: '#F8F4EE', logging: false });
       card.classList.remove('hires');
-
-      // download
-      const link = document.createElement('a');
-      link.download = 'books-terminal-selection.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-
-      // try Web Share API if supported (mobile)
-      if (navigator.share && navigator.canShare) {
-        canvas.toBlob(async (blob) => {
-          const file = new File([blob], 'books-terminal-selection.png', { type: 'image/png' });
-          if (navigator.canShare({ files: [file] })) {
-            try {
-              await navigator.share({
-                files: [file],
-                title: 'BOOKS Terminal — あなたへの5冊',
-                text: 'books-terminal.vercel.app'
-              });
-            } catch (_) {}
-          }
-        }, 'image/png');
+      const dataUrl = canvas.toDataURL('image/png');
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile) {
+        document.getElementById('share-preview-img').src = dataUrl;
+        document.getElementById('share-card').style.display = 'none';
+        document.getElementById('share-actions-default').style.display = 'none';
+        document.getElementById('share-actions-preview').style.display = 'block';
+        document.getElementById('share-modal-title').textContent = '長押しして写真に保存';
+      } else {
+        const link = document.createElement('a');
+        link.download = 'books-terminal-selection.png';
+        link.href = dataUrl;
+        link.click();
+        btn.textContent = '画像を生成する';
+        btn.disabled = false;
       }
-
     } catch (e) {
       alert('画像の生成に失敗しました。もう一度お試しください。');
       console.error(e);
-    } finally {
-      btn.textContent = '画像を保存';
+      btn.textContent = '画像を生成する';
       btn.disabled = false;
     }
   }
