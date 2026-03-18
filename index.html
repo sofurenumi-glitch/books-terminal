@@ -11,11 +11,11 @@
     :root {
       --cream: #F8F4EE;
       --cream-dark: #F0EBE3;
-      --brown: #3A322C;
-      --brown-mid: #7A6A5A;
-      --brown-light: #B8A898;
-      --brown-pale: #E0D8CE;
-      --accent: #9E8A72;
+      --brown: #2E2822;
+      --brown-mid: #60503F;
+      --brown-light: #8A7A6A;
+      --brown-pale: #D8CEC2;
+      --accent: #7D6A52;
       --card: #FDFAF6;
     }
 
@@ -133,7 +133,7 @@
     .loading-text { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--accent); font-size: 15px; letter-spacing: 2px; text-align: center; }
 
     .profile-card { background: var(--card); border-left: 2px solid var(--brown-pale); padding: 22px 26px; margin-bottom: 48px; }
-    .profile-text { color: #5A4A3E; font-size: 14px; line-height: 2.3; font-weight: 300; }
+    .profile-text { color: #3E2E24; font-size: 14px; line-height: 2.3; font-weight: 300; }
 
     .book { display: flex; gap: 18px; padding: 26px 0; border-bottom: 1px solid #EDE6DA; align-items: flex-start; }
     .book-icon { font-size: 18px; flex-shrink: 0; margin-top: 4px; }
@@ -356,7 +356,7 @@
     <p class="body-text">
       3つの質問に答えるだけで、<br>
       あなたのためだけの5冊が届きます。<br>
-      <span class="italic">初期値は、愛。</span>
+      <span class="italic">本と出会うことは、自分と出会うことだ。</span>
     </p>
     <button class="btn" onclick="showScreen('screen-pre')">選書をはじめる</button>
   </div>
@@ -397,6 +397,10 @@
     <h2 class="question" id="q-text"></h2>
     <p class="question-hint" id="q-hint"></p>
     <textarea class="textarea" id="q-answer" rows="5" oninput="onAnswerInput()"></textarea>
+    <div id="depth-hint" style="margin-top:10px;min-height:20px;display:flex;justify-content:space-between;align-items:center">
+      <span id="depth-msg" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:12px;color:var(--brown-light);transition:color 0.4s"></span>
+      <span id="char-count" style="font-family:'Cormorant Garamond',serif;font-size:11px;color:var(--brown-pale);letter-spacing:1px"></span>
+    </div>
     <p class="error-text" id="q-error" style="display:none"></p>
     <div class="nav">
       <button class="back-btn" onclick="prevQuestion()">← 戻る</button>
@@ -452,7 +456,7 @@
 
       <!-- footer -->
       <div class="share-card-footer">
-        <div class="share-card-tagline">初期値は、愛。</div>
+        <div class="share-card-tagline">本と出会うことは、自分と出会うことだ。</div>
         <div class="share-card-url">books-terminal.vercel.app</div>
       </div>
     </div>
@@ -535,6 +539,11 @@
     ta.value = answers[q.id];
     ta.placeholder = q.placeholder;
 
+    // reset depth hint then re-evaluate if answer already exists
+    document.getElementById('depth-msg').textContent = '';
+    document.getElementById('char-count').textContent = '';
+    if (answers[q.id]) onAnswerInput();
+
     const isLast = currentQ === QUESTIONS.length - 1;
     const btn = document.getElementById('btn-next');
     btn.textContent = isLast ? '選書する' : '次へ →';
@@ -543,8 +552,33 @@
 
   function onAnswerInput() {
     const q = QUESTIONS[currentQ];
-    answers[q.id] = document.getElementById('q-answer').value;
-    document.getElementById('btn-next').disabled = !answers[q.id].trim();
+    const val = document.getElementById('q-answer').value;
+    answers[q.id] = val;
+    document.getElementById('btn-next').disabled = !val.trim();
+
+    // depth hint
+    const len = val.trim().length;
+    const msg = document.getElementById('depth-msg');
+    const cnt = document.getElementById('char-count');
+
+    cnt.textContent = len > 0 ? `${len}字` : '';
+
+    if (len === 0) {
+      msg.textContent = '';
+      msg.style.color = 'var(--brown-pale)';
+    } else if (len < 15) {
+      msg.textContent = '少し詳しく教えてもらえると、より深い選書ができます。';
+      msg.style.color = 'var(--brown-light)';
+    } else if (len < 50) {
+      msg.textContent = 'もう少し言葉を重ねると、あなたの輪郭が見えてきます。';
+      msg.style.color = 'var(--accent)';
+    } else if (len < 120) {
+      msg.textContent = 'あなたのことが、だんだん見えてきました。';
+      msg.style.color = 'var(--brown-mid)';
+    } else {
+      msg.textContent = '深く語ってくれました。この言葉から選書します。';
+      msg.style.color = 'var(--brown)';
+    }
   }
 
   function prevQuestion() {
@@ -662,6 +696,11 @@ Q3（魔法でなれるとしたらどんな人・変身願望）：${answers.q3
     }
   }
 
+  function amazonUrl(title, author) {
+    const q = encodeURIComponent(`${title} ${author}`);
+    return `https://www.amazon.co.jp/s?k=${q}&tag=kentaro087-22`;
+  }
+
   function renderResult(result) {
     currentResult = result;
     document.getElementById('result-profile').textContent = result.profile;
@@ -676,6 +715,12 @@ Q3（魔法でなれるとしたらどんな人・変身願望）：${answers.q3
           <div class="book-title">${book.title}</div>
           <div class="book-author">${book.author}</div>
           <div class="book-reason">${book.reason}</div>
+          <a href="${amazonUrl(book.title, book.author)}" target="_blank" rel="noopener"
+             style="display:inline-block;margin-top:10px;font-family:'Cormorant Garamond',serif;font-size:12px;letter-spacing:2px;color:var(--accent);text-decoration:none;border-bottom:1px solid var(--brown-pale);padding-bottom:1px;transition:color 0.2s,border-color 0.2s"
+             onmouseover="this.style.color='var(--brown)';this.style.borderColor='var(--accent)'"
+             onmouseout="this.style.color='var(--accent)';this.style.borderColor='var(--brown-pale)'">
+            Amazonで見る →
+          </a>
         </div>
       </div>
     `).join('');
